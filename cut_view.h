@@ -16,11 +16,14 @@ class CutView: public QGraphicsView
 Q_OBJECT
 public:
   CutView();
-  void setSourcePath(QPainterPath path);
+  void setSideSourcePath(QPainterPath path);
+  void setTreadSourcePath(QPainterPath path);
 
 private:
   QGraphicsScene* scene_;
-  QGraphicsPathItem* path_item_;
+  QGraphicsPathItem* side_path_item_;
+  QGraphicsPathItem* tread_path_item_;
+  float half_tread_edge_length_;
 };
 
 #endif // CUT_VIEW_H

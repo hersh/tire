@@ -58,7 +58,8 @@ TireEditor::TireEditor()
 void TireEditor::onTextChanged()
 {
   path_view_->setPathString(text_edit_->toPlainText());
-  cut_view_->setSourcePath(path_view_->getPath());
+  cut_view_->setSideSourcePath(path_view_->getSidePath());
+  cut_view_->setTreadSourcePath(path_view_->getTreadPath());
 }
 
 void TireEditor::newFile()

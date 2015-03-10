@@ -19,7 +19,8 @@ public:
   PathView();
 
   void setPathString(QString path_string);
-  QPainterPath getPath() const { return path_; }
+  QPainterPath getSidePath() const { return side_path_; }
+  QPainterPath getTreadPath() const { return tread_path_; }
 
   static QPainterPath resample(const QPainterPath& path);
 
@@ -40,6 +41,8 @@ private:
   QGraphicsPathItem* right_item_;
   QGraphicsPathItem* tread_item_;
   QPainterPath path_;
+  QPainterPath side_path_;
+  QPainterPath tread_path_;
   QLabel* status_;
   float tread_width_;
 };

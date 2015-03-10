@@ -156,6 +156,8 @@ void PathView::setPathInItems()
   left_item_->setPath(side_path);
   right_item_->setPath(side_path);
   
+  side_path_ = side_path;
+
   QPainterPath tread_path;
   tread_path.moveTo(path.pointAtPercent(num_segments / float(total_segments)));
   for(int i = num_segments; i <= total_segments; i++)
@@ -169,4 +171,6 @@ void PathView::setPathInItems()
     tread_path.lineTo(point);
   }
   tread_item_->setPath(tread_path);
+
+  tread_path_ = tread_path;
 }

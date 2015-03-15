@@ -24,8 +24,13 @@ public Q_SLOTS:
   void open();
   void save();
   void saveAs();
+  void print();
 
 private:
+  void printPath(const QPainterPath& path,
+                 QPainter* painter,
+                 QPrinter* printer);
+
   QTextEdit* text_edit_;
   PathView* path_view_;
   QString current_file_name_;

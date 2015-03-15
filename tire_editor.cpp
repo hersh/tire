@@ -9,6 +9,9 @@
 #include <QFileInfo>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QPainter>
+#include <QPrintDialog>
+#include <QPrinter>
 #include <QSplitter>
 #include <QTextEdit>
 #include <cut_view.h>
@@ -47,11 +50,17 @@ TireEditor::TireEditor()
   save_as_act->setStatusTip(tr("Save the document with a new filename"));
   connect(save_as_act, SIGNAL(triggered()), this, SLOT(saveAs()));
 
+  QAction* print_act = new QAction(tr("&Print"), this);
+  print_act->setShortcuts(QKeySequence::Print);
+  print_act->setStatusTip(tr("Print the cutout patterns"));
+  connect(print_act, SIGNAL(triggered()), this, SLOT(print()));
+
   QMenu* file_menu = menuBar()->addMenu(tr("&File"));
   file_menu->addAction(new_act);
   file_menu->addAction(open_act);
   file_menu->addAction(save_act);
   file_menu->addAction(save_as_act);
+  file_menu->addAction(print_act);
   menuBar()->addMenu(file_menu);
 }
 
@@ -120,3 +129,42 @@ void TireEditor::saveAs()
   save();
 }
 
+void TireEditor::print()
+{
+  QPrinter printer;
+
+  QPrintDialog *dialog = new QPrintDialog(&printer, this);
+  dialog->setWindowTitle(tr("Print Cutout Patterns"));
+  if(dialog->exec() == QDialog::Accepted)
+  {
+    QPainter painter;
+    painter.begin(&printer);
+    printPath(cut_view_->sidePath(), &painter, &printer);
+    printer.newPage();
+    printPath(cut_view_->treadPath(), &painter, &printer);
+    painter.end();
+  }
+}
+
+void TireEditor::printPath(const QPainterPath& path,
+                           QPainter* painter,
+                           QPrinter* printer)
+{
+  QRectF path_bounds = path.boundingRect();
+  QRectF page_inches = printer->pageRect(QPrinter::Inch);
+  QRectF page_pixels = printer->pageRect(QPrinter::DevicePixel);
+
+  float dpi_x = page_pixels.width() / page_inches.width();
+  float dpi_y = page_pixels.height() / page_inches.height();
+
+  painter->resetTransform();
+  painter->translate(page_pixels.width() / 2 - path_bounds.center().y() * dpi_x,
+                     page_pixels.height() / 2 - path_bounds.center().x() * dpi_y);
+  painter->rotate(90);
+  painter->scale(dpi_x, dpi_y);
+  QPen fat_pen;
+  fat_pen.setWidthF(.03);
+  painter->setPen(fat_pen);
+  painter->drawPath(path);
+  painter->drawRect(QRectF(path_bounds.center().x()-.5, path_bounds.center().y()-.5, 1, 1));
+}

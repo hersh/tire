@@ -99,3 +99,4 @@ void CutView::setTreadSourcePath(QPainterPath path)
   cut_path.lineTo(0, 0);
   tread_path_item_->setPath(cut_path);
 }
+

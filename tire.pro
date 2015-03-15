@@ -1,5 +1,5 @@
 
-CONFIG += qt
+CONFIG += qt debug
 
 HEADERS += cut_view.h
 HEADERS += path_view.h

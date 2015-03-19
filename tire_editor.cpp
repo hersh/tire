@@ -150,6 +150,9 @@ void TireEditor::printPath(const QPainterPath& path,
                            QPainter* painter,
                            QPrinter* printer)
 {
+  // As measured on large-format printer at work.
+  float real_print_over_desired = (17.0 + 13.0/16.0) / 18.0;
+
   QRectF path_bounds = path.boundingRect();
   QRectF page_inches = printer->pageRect(QPrinter::Inch);
   QRectF page_pixels = printer->pageRect(QPrinter::DevicePixel);
@@ -161,9 +164,9 @@ void TireEditor::printPath(const QPainterPath& path,
   painter->translate(page_pixels.width() / 2 - path_bounds.center().y() * dpi_x,
                      page_pixels.height() / 2 - path_bounds.center().x() * dpi_y);
   painter->rotate(90);
-  painter->scale(dpi_x, dpi_y);
+  painter->scale(dpi_x / real_print_over_desired, dpi_y / real_print_over_desired);
   QPen fat_pen;
-  fat_pen.setWidthF(.03);
+  fat_pen.setWidthF(.01);
   painter->setPen(fat_pen);
   painter->drawPath(path);
   painter->drawRect(QRectF(path_bounds.center().x()-.5, path_bounds.center().y()-.5, 1, 1));
